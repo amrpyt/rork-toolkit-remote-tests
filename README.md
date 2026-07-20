@@ -28,8 +28,8 @@ Each job records its public egress IP before testing Rork.
 
 ## Latest measured results
 
-- 482 total measured agent requests across two completed runs.
-- Six distinct GitHub runner egress IPs.
+- 846 total measured agent requests across three completed successful runs.
+- Nine distinct GitHub runner egress IPs.
 - 0 responses with HTTP `429`.
 - 0 responses with HTTP `5xx`.
 - 96/96 successful requests at concurrency 96.
@@ -40,6 +40,10 @@ Each job records its public egress IP before testing Rork.
 Full report:
 
 https://amrpyt.github.io/rork-toolkit-docs/11-remote-capacity-results.html
+
+Latest successful run:
+
+https://github.com/amrpyt/rork-toolkit-remote-tests/actions/runs/29712865645
 
 Canonical documentation:
 

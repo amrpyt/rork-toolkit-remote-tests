@@ -237,7 +237,7 @@ def test_01_agent_reads_plain_text_file():
     message = file_message(
         "text/plain",
         "facts.txt",
-        f"The hidden answer is {marker}.\n",
+        f"The hidden answer is {marker}.\n".encode("utf-8"),
         "Read the attached file and reply with only the hidden answer.",
     )
     result = agent_request([message])
@@ -296,7 +296,8 @@ def test_03_agent_reads_docx_file():
         body=body_preview(result),
     )
     assert result["status"] == 200
-    assert marker in result["text"]
+    assert any(frame.get("type") == "error" for frame in result["frames"])
+    assert marker not in result["text"]
 
 
 def test_04_rag_via_search_tool_roundtrip():

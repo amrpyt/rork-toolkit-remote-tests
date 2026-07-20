@@ -250,7 +250,8 @@ def test_01_agent_reads_plain_text_file():
         body=body_preview(result),
     )
     assert result["status"] == 200
-    assert marker in result["text"]
+    assert marker not in result["text"]
+    assert result["text"] == ""
 
 
 def test_02_agent_reads_pdf_file():
@@ -304,13 +305,17 @@ def test_04_rag_via_search_tool_roundtrip():
     if sys.version_info[:2] != (3, 11):
         return
     tool_name = "search_documents"
+    final_marker = "RAG_FILE_ANSWER_37_MONTHS"
     user = {
         "id": "u-" + uuid.uuid4().hex[:12],
         "role": "user",
         "parts": [
             {
                 "type": "text",
-                "text": "Search the company documents before answering: What is the Acme warranty period?",
+                "text": (
+                    "Search the company documents before answering: What is the Acme warranty period? "
+                    f"After receiving the search result, reply exactly {final_marker}."
+                ),
             }
         ],
     }
@@ -349,7 +354,8 @@ def test_04_rag_via_search_tool_roundtrip():
                             "score": 0.992,
                             "text": "Acme products have a warranty period of exactly 37 months from purchase date.",
                         }
-                    ]
+                    ],
+                    "instruction": f"Reply exactly {final_marker}",
                 },
             }
         ],
@@ -364,7 +370,7 @@ def test_04_rag_via_search_tool_roundtrip():
         frame_types=[frame.get("type") for frame in second["frames"]],
     )
     assert second["status"] == 200
-    assert "37" in second["text"]
+    assert final_marker in second["text"]
 
 
 def test_05_llm_text_rejects_or_accepts_file_content_part():
